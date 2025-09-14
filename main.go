@@ -136,6 +136,8 @@ func makeArgs(query []string) []any {
 func respond(message *babashka.Message, response any) {
 	buf := bytes.NewBufferString("")
 	encoder := transit.NewEncoder(buf, false)
+
+	// no way to distinguish rune and int32, this ensures the proper encoder as there are no chars in duckdb
 	encoder.AddHandler(reflect.TypeFor[int32](), transit.NewIntEncoder())
 
 	if err := encoder.Encode(response); err != nil {
