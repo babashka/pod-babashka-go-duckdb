@@ -3,9 +3,9 @@ module github.com/babashka/pod-babashka-go-duckdb
 go 1.24.7
 
 require (
+	github.com/babashka/transit-go v0.0.0-20250914122507-fb54c87ade49
 	github.com/jackpal/bencode-go v1.0.2
 	github.com/marcboeker/go-duckdb/v2 v2.3.6
-	github.com/russolsen/transit v0.0.0-20180705123435-0794b4c4505a
 )
 
 require (
@@ -26,8 +26,6 @@ require (
 	github.com/marcboeker/go-duckdb/mapping v0.0.11 // indirect
 	github.com/pborman/uuid v1.2.1 // indirect
 	github.com/pierrec/lz4/v4 v4.1.22 // indirect
-	github.com/russolsen/ohyeah v0.0.0-20160324131710-f4938c005315 // indirect
-	github.com/russolsen/same v0.0.0-20160222130632-f089df61f51d // indirect
 	github.com/shopspring/decimal v1.4.0 // indirect
 	github.com/zeebo/xxh3 v1.0.2 // indirect
 	golang.org/x/exp v0.0.0-20250408133849-7e4ce0ab07d0 // indirect

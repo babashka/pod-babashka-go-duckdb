@@ -12,8 +12,8 @@ import (
 	"database/sql"
 
 	"github.com/babashka/pod-babashka-go-duckdb/babashka"
+	transit "github.com/babashka/transit-go"
 	_ "github.com/marcboeker/go-duckdb/v2"
-	"github.com/russolsen/transit"
 )
 
 type ExecResult = map[transit.Keyword]int64

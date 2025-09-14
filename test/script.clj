@@ -19,7 +19,7 @@
 
 (def png (java.nio.file.Files/readAllBytes (.toPath (io/file "resources/babashka.png"))))
 
-(prn (duckdb/execute! temp-file ["insert into foo (the_text, the_int, the_real, the_blob, the_json) values (?,?,?,?,?)" "foo" 1 3.5 png "{\"bar\": \"hello\"}"]))
+(prn (duckdb/execute! temp-file ["insert into foo (the_text, the_int, the_real, the_blob, the_json) values (?,?,?,?,?)" "foo" 1 3.14 png "{\"bar\": \"hello\"}"]))
 (prn (duckdb/execute! temp-file ["insert into foo (the_text, the_int, the_real) values (?,?,?)" "foo" 2 1.5]))
 
 (testing "multiple results"
@@ -32,7 +32,7 @@
 
 (def results-min-png (mapv #(dissoc % :the_blob :the_json) results))
 
-(def expected [{:the_int 1, :the_real 3.5, :the_text "foo"}
+(def expected [{:the_int 1, :the_real 3.14, :the_text "foo"}
                {:the_int 2, :the_real 1.5, :the_text "foo"}
                {:the_int 3, :the_real 1.5, :the_text "bar"}
                {:the_int 4, :the_real 1.5, :the_text "baz"}])
