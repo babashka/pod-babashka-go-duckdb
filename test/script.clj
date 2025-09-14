@@ -19,7 +19,7 @@
 
 (def png (java.nio.file.Files/readAllBytes (.toPath (io/file "resources/babashka.png"))))
 
-(prn (duckdb/execute! temp-file ["insert into foo (the_text, the_int, the_real, the_blob, the_json) values (?,?,?,?,?)" "foo" 1 3.14 png "{\"bar\": \"hello\"}"]))
+(prn (duckdb/execute! temp-file ["insert into foo (the_text, the_int, the_real, the_blob, the_json) values (?,?,?,?,?)" "foo" 1 3.5 png "{\"bar\": \"hello\"}"]))
 (prn (duckdb/execute! temp-file ["insert into foo (the_text, the_int, the_real) values (?,?,?)" "foo" 2 1.5]))
 
 (testing "multiple results"
@@ -32,7 +32,7 @@
 
 (def results-min-png (mapv #(dissoc % :the_blob :the_json) results))
 
-(def expected [{:the_int 1, :the_real 3.14, :the_text "foo"}
+(def expected [{:the_int 1, :the_real 3.5, :the_text "foo"}
                {:the_int 2, :the_real 1.5, :the_text "foo"}
                {:the_int 3, :the_real 1.5, :the_text "bar"}
                {:the_int 4, :the_real 1.5, :the_text "baz"}])
@@ -57,7 +57,7 @@
 
 (deftest error-test
   (is (thrown-with-msg?
-       Exception #"no such column: non_existing"
+       Exception #"Referenced column \"non_existing\" not found"
        (duckdb/query temp-file ["select non_existing from foo"])))
   (is (thrown-with-msg?
        Exception #"unexpected query type, expected a string or a vector"
@@ -65,3 +65,6 @@
   (is (thrown-with-msg?
        Exception #"the duckdb connection must be a string"
        (duckdb/query nil "select * from foo order by the_int asc"))))
+
+(let [{:keys [:fail :error]} (t/run-tests)]
+  (System/exit (+ fail error)))

@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"reflect"
 	"strings"
 
 	"container/list"
@@ -18,7 +19,7 @@ import (
 type ExecResult = map[transit.Keyword]int64
 
 func debug(v any) {
-	fmt.Fprintf(os.Stderr, "debug: %+q\n", v)
+	fmt.Fprintf(os.Stderr, "debug: %+v\n", v)
 }
 
 func encodeRows(rows *sql.Rows) ([]any, error) {
@@ -80,11 +81,9 @@ func encodeResult(result sql.Result) (ExecResult, error) {
 }
 
 func listToSlice(l *list.List) []any {
-	slice := make([]any, l.Len())
-	cnt := 0
+	slice := []any{}
 	for e := l.Front(); e != nil; e = e.Next() {
-		slice[cnt] = e.Value
-		cnt++
+		slice = append(slice, e.Value)
 	}
 
 	return slice
@@ -99,12 +98,22 @@ func parseQuery(args string) (string, string, []any, error) {
 	}
 
 	argSlice := listToSlice(value.(*list.List))
-	db, ok := argSlice[0].(string)
-	if !ok {
-		return "", "", nil, errors.New("the duckdb connection must be a string")
+	var query any
+	db := ""
+
+	if len(argSlice) == 1 {
+		query = argSlice[0]
+	} else {
+		path, ok := argSlice[0].(string)
+		if !ok {
+			return "", "", nil, errors.New("the duckdb connection must be a string")
+		}
+
+		query = argSlice[1]
+		db = path
 	}
 
-	switch queryArgs := argSlice[1].(type) {
+	switch queryArgs := query.(type) {
 	case string:
 		return db, queryArgs, make([]any, 0), nil
 	case []any:
@@ -127,13 +136,14 @@ func makeArgs(query []string) []any {
 func respond(message *babashka.Message, response any) {
 	buf := bytes.NewBufferString("")
 	encoder := transit.NewEncoder(buf, false)
+	encoder.AddHandler(reflect.TypeFor[int32](), transit.NewIntEncoder())
 
 	if err := encoder.Encode(response); err != nil {
 		babashka.WriteErrorResponse(message, err)
 		return
 	}
 
-	babashka.WriteInvokeResponse(message, string(buf.String()))
+	babashka.WriteInvokeResponse(message, buf.String())
 }
 
 func processMessage(message *babashka.Message) {
