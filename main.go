@@ -197,13 +197,14 @@ func processMessage(message *babashka.Message) {
 				respond(message, json)
 			}
 		case "pod.babashka.go-duckdb/query":
-			res, err := conn.Query(query, args...)
+			rows, err := conn.Query(query, args...)
 			if err != nil {
 				babashka.WriteErrorResponse(message, err)
 				return
 			}
+			defer rows.Close()
 
-			if json, err := encodeRows(res); err != nil {
+			if json, err := encodeRows(rows); err != nil {
 				babashka.WriteErrorResponse(message, err)
 			} else {
 				respond(message, json)
