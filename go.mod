@@ -5,7 +5,7 @@ go 1.24.7
 require (
 	github.com/babashka/transit-go v0.0.0-20250914122507-fb54c87ade49
 	github.com/jackpal/bencode-go v1.0.2
-	github.com/marcboeker/go-duckdb/v2 v2.4.0
+	github.com/marcboeker/go-duckdb/v2 v2.4.1
 )
 
 require (
@@ -32,7 +32,7 @@ require (
 	golang.org/x/mod v0.28.0 // indirect
 	golang.org/x/sync v0.17.0 // indirect
 	golang.org/x/sys v0.36.0 // indirect
-	golang.org/x/telemetry v0.0.0-20250908211612-aef8a434d053 // indirect
+	golang.org/x/telemetry v0.0.0-20251001141935-4eae98a72453 // indirect
 	golang.org/x/tools v0.37.0 // indirect
 	golang.org/x/xerrors v0.0.0-20240903120638-7835f813f4da // indirect
 )
